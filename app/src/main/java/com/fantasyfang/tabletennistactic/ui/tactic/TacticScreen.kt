@@ -1,36 +1,35 @@
 package com.fantasyfang.tabletennistactic.ui.tactic
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.fantasyfang.tabletennistactic.ui.component.FloorView
-import com.fantasyfang.tabletennistactic.util.DrawMode
-import androidx.constraintlayout.compose.ConstraintLayout
+import com.fantasyfang.tabletennistactic.ui.component.SettingBarView
 import com.fantasyfang.tabletennistactic.ui.component.TennisTableView
 
 @Composable
 fun TacticScreen(
     navController: NavController,
 ) {
-    val drawMode by remember { mutableStateOf(DrawMode.Touch) }
-
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
-    ){
-        val (floorView) = createRefs()
+    ) {
+        val (bottomIconRow) = createRefs()
 
-        val floorViewModifier = Modifier.constrainAs(floorView) {
-            top.linkTo(parent.top)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        }
+        val settingIconViewModifier = Modifier
+            .navigationBarsPadding()
+            .constrainAs(bottomIconRow) {
+                height = Dimension.wrapContent
+                width = Dimension.fillToConstraints
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
 
         FloorView(
             color = Color.Red,
@@ -38,6 +37,7 @@ fun TacticScreen(
         TennisTableView(
             backgroundColor = Color.Blue
         )
+        SettingBarView(settingIconViewModifier, color = Color.Red)
     }
 
 
