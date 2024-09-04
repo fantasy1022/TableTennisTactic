@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fantasyfang.tabletennistactic.ui.tactic.TacticScreen
+import com.fantasyfang.tabletennistactic.ui.tactic.TacticViewModel
 import com.fantasyfang.tabletennistactic.ui.theme.TabletennistacticNewTheme
 import com.fantasyfang.tabletennistactic.util.NavigationRoute
 
@@ -29,9 +30,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val viewModel = TacticViewModel()//TODO For initial test
 
     NavHost(navController = navController, startDestination = NavigationRoute.TACTIC.route) {
-        composable(NavigationRoute.TACTIC.route) { TacticScreen(navController) }
+        composable(NavigationRoute.TACTIC.route) { TacticScreen(navController, viewModel) }
     }
 }
 

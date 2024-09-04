@@ -24,27 +24,28 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fantasyfang.tabletennistactic.R
+import com.fantasyfang.tabletennistactic.ui.tactic.TacticUiState
 import com.fantasyfang.tabletennistactic.util.DrawMode
 
 @Composable
-fun SettingBarView(modifier: Modifier, color: Color) {
-    var drawMode by remember { mutableStateOf(DrawMode.Touch) }
+fun SettingBarView(
+    modifier: Modifier,
+    uiState: TacticUiState,
+    drawMode: DrawMode,
+    onDrawModeChange: (DrawMode) -> Unit
+) {
     val scrollState = rememberScrollState()
     val drawModeTransition = updateTransition(targetState = drawMode, label = "DrawModeTransition")
 
     Row(
         modifier = modifier
-            .background(color = color)
+            .background(color = uiState.floorColor)
             .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
     ) {
@@ -52,12 +53,17 @@ fun SettingBarView(modifier: Modifier, color: Color) {
         AddPlayerIconView()
 
         AnimateIcon(drawModeTransition) {
-            BrushColorIconView(Color.Red) // TODO: Change to brush color
+            BrushColorIconView(uiState.brushColor)
         }
         AnimateIcon(drawModeTransition) {
-            BrushWidthIconView(10f, Color.Red) // TODO: Change to brush color and width
+            BrushWidthIconView(
+                uiState.brushWidth,
+                uiState.brushColor
+            )
         }
-        EditIconView(drawMode) { newMode -> drawMode = newMode }
+        EditIconView(drawMode) {
+            onDrawModeChange(it)
+        }
         EraseIconView(drawMode)
         UndoIconView()
         RedoIconView()
