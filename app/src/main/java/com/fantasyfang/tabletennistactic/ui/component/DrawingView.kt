@@ -23,13 +23,18 @@ import com.fantasyfang.tabletennistactic.util.MotionEvent
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 
 @Composable
-fun DrawingView(modifier: Modifier, uiState: TacticUiState, drawMode: DrawMode) {
+fun DrawingView(
+    modifier: Modifier,
+    uiState: TacticUiState,
+    drawMode: DrawMode,
+    paths: PathUndoRedoList
+) {
     var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
     var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
     var currentPath by remember { mutableStateOf(Path()) }
     var currentPathProperty by remember { mutableStateOf(PathProperties()) }
-    val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
+
 
     Column(
         modifier = modifier

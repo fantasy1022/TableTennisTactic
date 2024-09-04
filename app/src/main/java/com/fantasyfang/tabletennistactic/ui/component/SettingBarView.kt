@@ -38,6 +38,8 @@ fun SettingBarView(
     modifier: Modifier,
     uiState: TacticUiState,
     drawMode: DrawMode,
+    onPathUndo: () -> Unit,
+    onPathRedo: () -> Unit,
     onDrawModeChange: (DrawMode) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -51,22 +53,20 @@ fun SettingBarView(
     ) {
         SettingIconView()
         AddPlayerIconView()
-
         AnimateIcon(drawModeTransition) {
             BrushColorIconView(uiState.brushColor)
         }
         AnimateIcon(drawModeTransition) {
             BrushWidthIconView(
-                uiState.brushWidth,
-                uiState.brushColor
+                uiState.brushWidth, uiState.brushColor
             )
         }
         EditIconView(drawMode) {
             onDrawModeChange(it)
         }
         EraseIconView(drawMode)
-        UndoIconView()
-        RedoIconView()
+        UndoIconView(onPathUndo)
+        RedoIconView(onPathRedo)
         ClearAllIconView()
     }
 }
@@ -84,8 +84,10 @@ private fun ClearAllIconView() {
 }
 
 @Composable
-private fun RedoIconView() {
-    IconButton(onClick = {}) {
+private fun RedoIconView(onPathRedo: () -> Unit) {
+    IconButton(onClick = {
+        onPathRedo.invoke()
+    }) {
         Icon(
             painterResource(id = R.drawable.ic_redo_24),
             contentDescription = "Redo",
@@ -95,8 +97,10 @@ private fun RedoIconView() {
 }
 
 @Composable
-private fun UndoIconView() {
-    IconButton(onClick = {}) {
+private fun UndoIconView(onPathUndo: () -> Unit) {
+    IconButton(onClick = {
+        onPathUndo.invoke()
+    }) {
         Icon(
             painterResource(id = R.drawable.ic_undo_24),
             contentDescription = "Undo",

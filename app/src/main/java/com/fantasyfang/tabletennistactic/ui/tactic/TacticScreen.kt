@@ -17,6 +17,7 @@ import com.fantasyfang.tabletennistactic.ui.component.FloorView
 import com.fantasyfang.tabletennistactic.ui.component.SettingBarView
 import com.fantasyfang.tabletennistactic.ui.component.TennisTableView
 import com.fantasyfang.tabletennistactic.util.DrawMode
+import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 
 @Composable
 fun TacticScreen(
@@ -51,6 +52,8 @@ fun TacticScreen(
             bottom.linkTo(settingIconView.top)
         }
 
+        val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
+
         FloorView(
             color = uiState.floorColor,
         )
@@ -61,10 +64,21 @@ fun TacticScreen(
         DrawingView(
             modifier = drawingScreenModifier,
             uiState = uiState,
-            drawMode = drawMode
+            drawMode = drawMode,
+            paths = paths,
         )
 
-        SettingBarView(settingIconViewModifier, uiState = uiState, drawMode = drawMode) {
+        SettingBarView(
+            settingIconViewModifier,
+            uiState = uiState,
+            drawMode = drawMode,
+            onPathUndo = {
+                paths.undo()
+            },
+            onPathRedo = {
+                paths.redo()
+            },
+        ) {
             drawMode = it
         }
     }
