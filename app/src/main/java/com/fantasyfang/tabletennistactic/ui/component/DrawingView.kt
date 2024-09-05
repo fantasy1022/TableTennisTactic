@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,7 @@ fun DrawingView(
     modifier: Modifier,
     uiState: TacticUiState,
     drawMode: DrawMode,
-    paths: PathUndoRedoList
+    paths: PathUndoRedoList,
 ) {
     var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
@@ -35,6 +36,9 @@ fun DrawingView(
     var currentPath by remember { mutableStateOf(Path()) }
     var currentPathProperty by remember { mutableStateOf(PathProperties()) }
 
+    LaunchedEffect(drawMode) {
+        currentPathProperty = currentPathProperty.copy(eraseMode = (drawMode == DrawMode.Erase))
+    }
 
     Column(
         modifier = modifier

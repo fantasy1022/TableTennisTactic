@@ -26,6 +26,7 @@ fun TacticScreen(
 ) {
     val uiState = mainViewModel.uiState.collectAsState().value
     var drawMode by remember { mutableStateOf(DrawMode.Touch) }
+    val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -52,8 +53,6 @@ fun TacticScreen(
             bottom.linkTo(settingIconView.top)
         }
 
-        val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
-
         FloorView(
             color = uiState.floorColor,
         )
@@ -72,16 +71,19 @@ fun TacticScreen(
             settingIconViewModifier,
             uiState = uiState,
             drawMode = drawMode,
-            onPathUndo = {
+            onPathUndoClick = {
                 paths.undo()
             },
-            onPathRedo = {
+            onPathRedoClick = {
                 paths.redo()
             },
-        ) {
-            drawMode = it
-        }
+            onEditIconClick = {
+                drawMode = if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch
+            },
+            onEraseIconClick = {
+                drawMode = if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch
+            }
+        )
     }
-
 
 }

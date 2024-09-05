@@ -38,9 +38,10 @@ fun SettingBarView(
     modifier: Modifier,
     uiState: TacticUiState,
     drawMode: DrawMode,
-    onPathUndo: () -> Unit,
-    onPathRedo: () -> Unit,
-    onDrawModeChange: (DrawMode) -> Unit
+    onPathUndoClick: () -> Unit,
+    onPathRedoClick: () -> Unit,
+    onEditIconClick: () -> Unit,
+    onEraseIconClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val drawModeTransition = updateTransition(targetState = drawMode, label = "DrawModeTransition")
@@ -61,12 +62,10 @@ fun SettingBarView(
                 uiState.brushWidth, uiState.brushColor
             )
         }
-        EditIconView(drawMode) {
-            onDrawModeChange(it)
-        }
-        EraseIconView(drawMode)
-        UndoIconView(onPathUndo)
-        RedoIconView(onPathRedo)
+        EditIconView(drawMode, onEditIconClick)
+        EraseIconView(drawMode, onEraseIconClick)
+        UndoIconView(onPathUndoClick)
+        RedoIconView(onPathRedoClick)
         ClearAllIconView()
     }
 }
@@ -110,18 +109,6 @@ private fun UndoIconView(onPathUndo: () -> Unit) {
 }
 
 @Composable
-private fun EraseIconView(drawMode: DrawMode) {
-    IconButton(onClick = {}) {
-        Icon(
-            painterResource(id = R.drawable.ic_eraser_24),
-            contentDescription = "Eraser",
-            tint = if (drawMode == DrawMode.Erase) Color.Yellow else Color.White
-        )
-    }
-}
-
-
-@Composable
 private fun SettingIconView() {
     IconButton(onClick = {}) {
         Icon(
@@ -142,14 +129,29 @@ private fun AddPlayerIconView() {
 }
 
 @Composable
-private fun EditIconView(drawMode: DrawMode, onDrawModeChange: (DrawMode) -> Unit) {
+private fun EditIconView(drawMode: DrawMode, onEditIconClick: () -> Unit) {
     IconButton(onClick = {
-        onDrawModeChange(if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch)
+        onEditIconClick.invoke()
+//        onDrawModeChange(if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch)
     }) {
         Icon(
             Icons.Default.Edit,
             contentDescription = "Edit",
             tint = if (drawMode == DrawMode.Draw) Color.Cyan else Color.White
+        )
+    }
+}
+
+@Composable
+private fun EraseIconView(drawMode: DrawMode, onEraseIconClick: () -> Unit) {
+    IconButton(onClick = {
+        onEraseIconClick.invoke()
+//        onDrawModeChange(if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch)
+    }) {
+        Icon(
+            painterResource(id = R.drawable.ic_eraser_24),
+            contentDescription = "Eraser",
+            tint = if (drawMode == DrawMode.Erase) Color.Yellow else Color.White
         )
     }
 }
