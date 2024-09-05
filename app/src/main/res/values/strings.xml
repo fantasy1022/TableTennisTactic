@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">Tabletennistactic new</string>
+    <string name="app_name">TableTennisTactic</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_cancel">Cancel</string>
+
+
+    <string name="brush_width_title">Brush Width</string>
+    <string name="brush_width_value">Current value</string>
+
+    <string name="brush_color_title">Brush color</string>
+
 </resources>

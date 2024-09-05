@@ -9,13 +9,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import com.fantasyfang.tabletennistactic.R
 import com.fantasyfang.tabletennistactic.ui.component.DrawingView
 import com.fantasyfang.tabletennistactic.ui.component.FloorView
 import com.fantasyfang.tabletennistactic.ui.component.SettingBarView
 import com.fantasyfang.tabletennistactic.ui.component.TennisTableView
+import com.fantasyfang.tabletennistactic.ui.component.dialog.BrushWidthDialog
+import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
+import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 
@@ -27,6 +32,8 @@ fun TacticScreen(
     val uiState = mainViewModel.uiState.collectAsState().value
     var drawMode by remember { mutableStateOf(DrawMode.Touch) }
     val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
+    var showBrushWidthDialog by remember { mutableStateOf(false) }
+    var showBrushColorDialog by remember { mutableStateOf(false) }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -74,6 +81,12 @@ fun TacticScreen(
             onEditIconClick = {
                 drawMode = if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch
             },
+            onBrushWidthClick = {
+                showBrushWidthDialog = true
+            },
+            onBrushColorClick = {
+                showBrushColorDialog = true
+            },
             onEraseIconClick = {
                 drawMode = if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch
             },
@@ -87,6 +100,28 @@ fun TacticScreen(
                 paths.clear()
             }
         )
+
+        if (showBrushWidthDialog) {
+            BrushWidthDialog(
+                brushSize = uiState.brushWidth,
+                onBrushSizeChange = { width ->
+                    //TODO: Save brush width
+                },
+                onDismissRequest = { showBrushWidthDialog = false })
+        }
+
+        if (showBrushColorDialog) {
+            ColorSelectDialog(
+                titleId = R.string.brush_color_title,
+                selectedColor = uiState.brushColor,
+                colorList = BrushColorList,
+                onColorSelect = { color: Color ->
+                    //TODO: Save brush color
+                },
+                onDismissRequest = { showBrushColorDialog = false },
+            )
+        }
+
     }
 
 }

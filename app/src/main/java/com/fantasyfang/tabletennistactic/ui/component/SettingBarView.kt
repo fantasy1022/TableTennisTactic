@@ -39,6 +39,8 @@ fun SettingBarView(
     uiState: TacticUiState,
     drawMode: DrawMode,
     onEditIconClick: () -> Unit,
+    onBrushWidthClick: () -> Unit,
+    onBrushColorClick: () -> Unit,
     onEraseIconClick: () -> Unit,
     onPathUndoClick: () -> Unit,
     onPathRedoClick: () -> Unit,
@@ -56,12 +58,12 @@ fun SettingBarView(
         SettingIconView()
         AddPlayerIconView()
         AnimateIcon(drawModeTransition) {
-            BrushColorIconView(uiState.brushColor)
+            BrushWidthIconView(
+                uiState.brushWidth, uiState.brushColor, onBrushWidthClick
+            )
         }
         AnimateIcon(drawModeTransition) {
-            BrushWidthIconView(
-                uiState.brushWidth, uiState.brushColor
-            )
+            BrushColorIconView(uiState.brushColor, onBrushColorClick)
         }
         EditIconView(drawMode, onEditIconClick)
         EraseIconView(drawMode, onEraseIconClick)
@@ -159,9 +161,11 @@ private fun EraseIconView(drawMode: DrawMode, onEraseIconClick: () -> Unit) {
 }
 
 @Composable
-private fun BrushWidthIconView(brushWidth: Float, brushColor: Color) {
+private fun BrushWidthIconView(
+    brushWidth: Float, brushColor: Color, onBrushWidthClick: () -> Unit,
+) {
     IconButton(onClick = {
-
+        onBrushWidthClick.invoke()
     }) {
         Box(
             modifier = Modifier
@@ -180,9 +184,9 @@ private fun BrushWidthIconView(brushWidth: Float, brushColor: Color) {
 }
 
 @Composable
-private fun BrushColorIconView(brushColor: Color) {
+private fun BrushColorIconView(brushColor: Color, onBrushColorClick: () -> Unit) {
     IconButton(onClick = {
-
+        onBrushColorClick.invoke()
     }) {
         Box(
             modifier = Modifier

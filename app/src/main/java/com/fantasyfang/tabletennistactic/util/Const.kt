@@ -25,5 +25,8 @@ class Const {
         val DEFAULT_PLAYER_ICON_RADIUS =
             (PLAYER_ICON_RADIUS_MIN + PLAYER_ICON_RADIUS_MAX) / 2
         val DEFAULT_IS_SHOW_PLAYER_NAME = true
+
+        val BRUSH_WIDTH_MIN = 1f
+        val BRUSH_WIDTH_MAX = 20f
     }
 }
