@@ -50,7 +50,7 @@ fun BrushWidthDialog(
                     modifier = Modifier.padding(bottom = 8.dp),
                     value = brushSize,
                     onValueChange = onBrushSizeChange,
-                    valueRange = BRUSH_WIDTH_MIN..BRUSH_WIDTH_MAX,//TODO: Use constant
+                    valueRange = BRUSH_WIDTH_MIN..BRUSH_WIDTH_MAX,
                     steps = 0,
                 )
                 Text(

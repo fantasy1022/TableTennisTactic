@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.usecase.tactic.GetTacticUseCase
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_COLOR
@@ -40,6 +41,12 @@ class TacticViewModel(
         }
     }
 
+    fun insertPlayerInfo(playerInfo: PlayerInfo) {
+        viewModelScope.launch {
+
+        }
+    }
+
 }
 
 data class TacticUiState(
@@ -51,5 +58,5 @@ data class TacticUiState(
     val isShowPlayerName: Boolean = DEFAULT_IS_SHOW_PLAYER_NAME,
     val brushColor: Color = DEFAULT_BRUSH_COLOR,
     val brushWidth: Float = DEFAULT_BRUSH_WIDTH,
-//    val player: List<PlayerInfo> = emptyList()
+    val player: List<PlayerInfo> = emptyList()
 )

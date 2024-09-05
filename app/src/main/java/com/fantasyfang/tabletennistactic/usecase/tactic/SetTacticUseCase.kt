@@ -2,6 +2,7 @@ package com.fantasyfang.tabletennistactic.usecase.tactic
 
 import androidx.compose.ui.graphics.Color
 import com.fantasyfang.tabletennistactic.repository.brush.BrushRepository
+import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 
 class SetTacticUseCase(
     private val brushRepository: BrushRepository,

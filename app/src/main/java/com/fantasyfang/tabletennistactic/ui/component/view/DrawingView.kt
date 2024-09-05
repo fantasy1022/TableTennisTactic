@@ -1,4 +1,4 @@
-package com.fantasyfang.tabletennistactic.ui.component
+package com.fantasyfang.tabletennistactic.ui.component.view
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.positionChange
 import com.fantasyfang.tabletennistactic.repository.path.PathProperties
+import com.fantasyfang.tabletennistactic.ui.component.dragMotionEvent
 import com.fantasyfang.tabletennistactic.ui.tactic.TacticUiState
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.MotionEvent

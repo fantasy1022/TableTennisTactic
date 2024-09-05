@@ -1,4 +1,4 @@
-package com.fantasyfang.tabletennistactic.ui.component
+package com.fantasyfang.tabletennistactic.ui.component.view
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Transition
@@ -45,6 +45,7 @@ fun SettingBarView(
     onPathUndoClick: () -> Unit,
     onPathRedoClick: () -> Unit,
     onPathClearClick: () -> Unit,
+    onAddPlayerClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val drawModeTransition = updateTransition(targetState = drawMode, label = "DrawModeTransition")
@@ -56,7 +57,7 @@ fun SettingBarView(
         horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
     ) {
         SettingIconView()
-        AddPlayerIconView()
+        AddPlayerIconView(onAddPlayerClick)
         AnimateIcon(drawModeTransition) {
             BrushWidthIconView(
                 uiState.brushWidth, uiState.brushColor, onBrushWidthClick
@@ -123,8 +124,10 @@ private fun SettingIconView() {
 }
 
 @Composable
-private fun AddPlayerIconView() {
-    IconButton(onClick = {}) {
+private fun AddPlayerIconView(onAddPlayerClick: () -> Unit) {
+    IconButton(onClick = {
+        onAddPlayerClick.invoke()
+    }) {
         Icon(
             painterResource(id = R.drawable.ic_person_add_24),
             contentDescription = "Add Person",
@@ -137,7 +140,6 @@ private fun AddPlayerIconView() {
 private fun EditIconView(drawMode: DrawMode, onEditIconClick: () -> Unit) {
     IconButton(onClick = {
         onEditIconClick.invoke()
-//        onDrawModeChange(if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch)
     }) {
         Icon(
             Icons.Default.Edit,

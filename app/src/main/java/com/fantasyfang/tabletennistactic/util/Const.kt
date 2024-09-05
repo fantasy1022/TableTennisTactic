@@ -1,10 +1,12 @@
 package com.fantasyfang.tabletennistactic.util
 
 import androidx.compose.ui.unit.dp
+import com.fantasyfang.tabletennistactic.ui.theme.AMBER_A700
 import com.fantasyfang.tabletennistactic.ui.theme.FloorColorList
 import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
 import com.fantasyfang.tabletennistactic.ui.theme.TableColorList
 import com.fantasyfang.tabletennistactic.ui.theme.TeamColorList
+import com.fantasyfang.tabletennistactic.ui.theme.YELLOW_A700
 
 class Const {
     companion object {
@@ -28,5 +30,8 @@ class Const {
 
         val BRUSH_WIDTH_MIN = 1f
         val BRUSH_WIDTH_MAX = 20f
+
+        val DEFAULT_BALL_RADIUS = 20.dp
+        val DEFAULT_BALL_COLOR = AMBER_A700
     }
 }

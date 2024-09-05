@@ -1,4 +1,4 @@
-package com.fantasyfang.tabletennistactic.ui.component
+package com.fantasyfang.tabletennistactic.ui.component.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

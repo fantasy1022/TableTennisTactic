@@ -9,20 +9,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.fantasyfang.tabletennistactic.R
-import com.fantasyfang.tabletennistactic.ui.component.DrawingView
-import com.fantasyfang.tabletennistactic.ui.component.FloorView
-import com.fantasyfang.tabletennistactic.ui.component.SettingBarView
-import com.fantasyfang.tabletennistactic.ui.component.TennisTableView
+import com.fantasyfang.tabletennistactic.data.player.Team
+import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.ui.component.dialog.BrushWidthDialog
 import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
+import com.fantasyfang.tabletennistactic.ui.component.dialog.TeamSelectionDialog
+import com.fantasyfang.tabletennistactic.ui.component.view.BallView
+import com.fantasyfang.tabletennistactic.ui.component.view.DrawingView
+import com.fantasyfang.tabletennistactic.ui.component.view.FloorView
+import com.fantasyfang.tabletennistactic.ui.component.view.PlayerView
+import com.fantasyfang.tabletennistactic.ui.component.view.SettingBarView
+import com.fantasyfang.tabletennistactic.ui.component.view.TennisTableView
 import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushColor
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushWidth
+import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_COLOR
+import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_RADIUS
+import com.fantasyfang.tabletennistactic.util.Const.Companion.MAX_PLAYER_INDEX
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 
@@ -36,6 +45,7 @@ fun TacticScreen(
     val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
     var showBrushWidthDialog by remember { mutableStateOf(false) }
     var showBrushColorDialog by remember { mutableStateOf(false) }
+    var showTeamDialog by remember { mutableStateOf(false) }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -100,8 +110,41 @@ fun TacticScreen(
             },
             onPathClearClick = {
                 paths.clear()
+            },
+            onAddPlayerClick = {
+                showTeamDialog = true
             }
         )
+
+        BallView(
+            ballRadius = DEFAULT_BALL_RADIUS,
+            ballColor = DEFAULT_BALL_COLOR,
+        )
+
+        uiState.player.forEachIndexed { index, playerInfo ->
+            val backgroundColor = if (playerInfo.team == Team.TEAM_1) {
+                uiState.team1Color
+            } else {
+                uiState.team2Color
+            }
+
+            PlayerView(
+                playerInfo,
+                backgroundColor = backgroundColor,
+                playerRadius = uiState.playerIconRadius,
+                isShowPlayerName = uiState.isShowPlayerName,
+                initialPosition = uiState.player[index].offset,
+                onPositionChange = { position ->
+
+                },
+                onClick = {
+
+                },
+                onDoubleClick = {
+
+                }
+            )
+        }
 
         if (showBrushWidthDialog) {
             BrushWidthDialog(
@@ -122,6 +165,29 @@ fun TacticScreen(
                     mainViewModel.saveSetting(BrushColor(color))
                 },
                 onDismissRequest = { showBrushColorDialog = false },
+            )
+        }
+
+        if (showTeamDialog) {
+            TeamSelectionDialog(
+                onTeamSelected = { team ->
+                    val teamSize = uiState.player.filter { it.team == team }.size
+                    val playerIndex = teamSize + 1
+                    if (playerIndex <= MAX_PLAYER_INDEX) {
+                        val playerInfo = PlayerInfo(
+                            id = null,
+                            team = team,
+                            index = playerIndex,
+                            name = "Player $playerIndex",
+                            offset = Offset.Zero
+                        )
+                        mainViewModel.insertPlayerInfo(playerInfo)
+                    }
+                    showTeamDialog = false
+                },
+                onDismissRequest = {
+                    showTeamDialog = false
+                }
             )
         }
 
