@@ -71,17 +71,20 @@ fun TacticScreen(
             settingIconViewModifier,
             uiState = uiState,
             drawMode = drawMode,
+            onEditIconClick = {
+                drawMode = if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch
+            },
+            onEraseIconClick = {
+                drawMode = if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch
+            },
             onPathUndoClick = {
                 paths.undo()
             },
             onPathRedoClick = {
                 paths.redo()
             },
-            onEditIconClick = {
-                drawMode = if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch
-            },
-            onEraseIconClick = {
-                drawMode = if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch
+            onPathClearClick = {
+                paths.clear()
             }
         )
     }

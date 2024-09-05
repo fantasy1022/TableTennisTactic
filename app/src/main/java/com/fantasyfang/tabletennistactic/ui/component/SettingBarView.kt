@@ -38,10 +38,11 @@ fun SettingBarView(
     modifier: Modifier,
     uiState: TacticUiState,
     drawMode: DrawMode,
-    onPathUndoClick: () -> Unit,
-    onPathRedoClick: () -> Unit,
     onEditIconClick: () -> Unit,
     onEraseIconClick: () -> Unit,
+    onPathUndoClick: () -> Unit,
+    onPathRedoClick: () -> Unit,
+    onPathClearClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val drawModeTransition = updateTransition(targetState = drawMode, label = "DrawModeTransition")
@@ -66,14 +67,16 @@ fun SettingBarView(
         EraseIconView(drawMode, onEraseIconClick)
         UndoIconView(onPathUndoClick)
         RedoIconView(onPathRedoClick)
-        ClearAllIconView()
+        ClearAllIconView(onPathClearClick)
     }
 }
 
 
 @Composable
-private fun ClearAllIconView() {
-    IconButton(onClick = {}) {
+private fun ClearAllIconView(onPathClearClick: () -> Unit) {
+    IconButton(onClick = {
+        onPathClearClick.invoke()
+    }) {
         Icon(
             painterResource(id = R.drawable.ic_clear_all_24),
             contentDescription = "Clear",
@@ -146,7 +149,6 @@ private fun EditIconView(drawMode: DrawMode, onEditIconClick: () -> Unit) {
 private fun EraseIconView(drawMode: DrawMode, onEraseIconClick: () -> Unit) {
     IconButton(onClick = {
         onEraseIconClick.invoke()
-//        onDrawModeChange(if (drawMode != DrawMode.Erase) DrawMode.Erase else DrawMode.Touch)
     }) {
         Icon(
             painterResource(id = R.drawable.ic_eraser_24),

@@ -7,10 +7,14 @@ import com.fantasyfang.tabletennistactic.repository.PathProperties
 
 class PathUndoRedoList {
     private val redoStack: SnapshotStateList<Pair<Path, PathProperties>> = mutableStateListOf()
-    var currentList: SnapshotStateList<Pair<Path, PathProperties>> = mutableStateListOf()
+    private val currentList: SnapshotStateList<Pair<Path, PathProperties>> = mutableStateListOf()
 
     fun add(element: Pair<Path, PathProperties>) {
         currentList.add(element)
+    }
+
+    fun getPathList(): List<Pair<Path, PathProperties>> {
+        return currentList
     }
 
     fun undo() {
@@ -18,7 +22,7 @@ class PathUndoRedoList {
             val currentId = currentList.last().first.hashCode()
             val linesToRemove = currentList.filter { it.first.hashCode() == currentId }
             redoStack.addAll(linesToRemove)
-            currentList = currentList.apply { removeIf { it.first.hashCode() == currentId } }
+            currentList.apply { removeIf { it.first.hashCode() == currentId } }
         }
     }
 
@@ -29,5 +33,10 @@ class PathUndoRedoList {
             redoStack.removeAll(linesToAdd)
             currentList.addAll(linesToAdd)
         }
+    }
+
+    fun clear() {
+        currentList.clear()
+        redoStack.clear()
     }
 }

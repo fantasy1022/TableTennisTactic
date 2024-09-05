@@ -127,7 +127,7 @@ fun DrawingView(
             // Draw the paths
             with(drawContext.canvas.nativeCanvas) {
                 val checkPoint = saveLayer(null, null)
-                paths.currentList.forEach {
+                paths.getPathList().forEach {
                     val path = it.first
                     val property = it.second
 
