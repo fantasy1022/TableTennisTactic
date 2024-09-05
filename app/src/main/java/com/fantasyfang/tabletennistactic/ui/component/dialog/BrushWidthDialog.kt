@@ -3,6 +3,7 @@ package com.fantasyfang.tabletennistactic.ui.component.dialog
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.fantasyfang.tabletennistactic.R
 import com.fantasyfang.tabletennistactic.util.Const.Companion.BRUSH_WIDTH_MAX
 import com.fantasyfang.tabletennistactic.util.Const.Companion.BRUSH_WIDTH_MIN
@@ -31,6 +33,7 @@ fun BrushWidthDialog(
             Column {
                 Canvas(
                     modifier = Modifier
+                        .padding(bottom = 8.dp)
                         .fillMaxWidth()
                         .wrapContentHeight()
                 ) {
@@ -44,6 +47,7 @@ fun BrushWidthDialog(
                 }
 
                 Slider(
+                    modifier = Modifier.padding(bottom = 8.dp),
                     value = brushSize,
                     onValueChange = onBrushSizeChange,
                     valueRange = BRUSH_WIDTH_MIN..BRUSH_WIDTH_MAX,//TODO: Use constant
