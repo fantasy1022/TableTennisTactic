@@ -1,4 +1,4 @@
-package com.fantasyfang.tabletennistactic.repository
+package com.fantasyfang.tabletennistactic.repository.path
 
 import androidx.compose.ui.graphics.Color
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_COLOR

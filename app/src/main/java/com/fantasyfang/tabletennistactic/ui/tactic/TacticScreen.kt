@@ -21,6 +21,8 @@ import com.fantasyfang.tabletennistactic.ui.component.TennisTableView
 import com.fantasyfang.tabletennistactic.ui.component.dialog.BrushWidthDialog
 import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
 import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushColor
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushWidth
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 
@@ -106,6 +108,7 @@ fun TacticScreen(
                 brushSize = uiState.brushWidth,
                 onBrushSizeChange = { width ->
                     //TODO: Save brush width
+                    mainViewModel.saveSetting(BrushWidth(width))
                 },
                 onDismissRequest = { showBrushWidthDialog = false })
         }
@@ -116,7 +119,7 @@ fun TacticScreen(
                 selectedColor = uiState.brushColor,
                 colorList = BrushColorList,
                 onColorSelect = { color: Color ->
-                    //TODO: Save brush color
+                    mainViewModel.saveSetting(BrushColor(color))
                 },
                 onDismissRequest = { showBrushColorDialog = false },
             )

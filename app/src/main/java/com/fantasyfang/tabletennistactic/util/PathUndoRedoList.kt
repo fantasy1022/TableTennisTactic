@@ -3,7 +3,7 @@ package com.fantasyfang.tabletennistactic.util
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Path
-import com.fantasyfang.tabletennistactic.repository.PathProperties
+import com.fantasyfang.tabletennistactic.repository.path.PathProperties
 
 class PathUndoRedoList {
     private val redoStack: SnapshotStateList<Pair<Path, PathProperties>> = mutableStateListOf()

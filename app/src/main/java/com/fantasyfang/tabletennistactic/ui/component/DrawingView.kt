@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.positionChange
-import com.fantasyfang.tabletennistactic.repository.PathProperties
+import com.fantasyfang.tabletennistactic.repository.path.PathProperties
 import com.fantasyfang.tabletennistactic.ui.tactic.TacticUiState
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.MotionEvent
