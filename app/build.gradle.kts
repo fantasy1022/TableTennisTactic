@@ -66,6 +66,9 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.android.compose)
+    implementation(libs.facebook.flipper)
+    implementation(libs.facebook.flipper.network)
+    implementation(libs.facebook.soloader)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
