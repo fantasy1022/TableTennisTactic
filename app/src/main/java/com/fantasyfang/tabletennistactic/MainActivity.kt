@@ -39,16 +39,8 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    //TODO: Use Koin
-    val context = LocalContext.current
-    val viewModel =
-        TacticViewModel(
-            GetTacticUseCase(BrushRepositoryImpl(context.dataStore)),
-            SetTacticUseCase(BrushRepositoryImpl(context.dataStore)),
-        )
-
     NavHost(navController = navController, startDestination = NavigationRoute.TACTIC.route) {
-        composable(NavigationRoute.TACTIC.route) { TacticScreen(navController, viewModel) }
+        composable(NavigationRoute.TACTIC.route) { TacticScreen(navController) }
     }
 }
 

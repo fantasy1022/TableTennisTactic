@@ -34,11 +34,12 @@ import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_RADIU
 import com.fantasyfang.tabletennistactic.util.Const.Companion.MAX_PLAYER_INDEX
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TacticScreen(
     navController: NavController,
-    mainViewModel: TacticViewModel,
+    mainViewModel: TacticViewModel = koinViewModel(),
 ) {
     val uiState = mainViewModel.uiState.collectAsState().value
     var drawMode by remember { mutableStateOf(DrawMode.Touch) }

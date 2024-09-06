@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.datastore.preferences.core.jvm)
     implementation(libs.androidx.datastore.preferences.android)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
