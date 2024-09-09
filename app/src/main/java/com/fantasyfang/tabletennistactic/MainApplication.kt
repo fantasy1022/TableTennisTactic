@@ -38,21 +38,11 @@ class MainApplication : Application() {
             SoLoader.init(this, false)
 
             AndroidFlipperClient.getInstance(this).apply {
-                addPlugin(
-                    InspectorFlipperPlugin(
-                        this@MainApplication,
-                        DescriptorMapping.withDefaults()
-                    )
-                )
+                addPlugin(InspectorFlipperPlugin(this@MainApplication, DescriptorMapping.withDefaults()))
                 addPlugin(NetworkFlipperPlugin())
                 addPlugin(DatabasesFlipperPlugin(this@MainApplication))
-                addPlugin(
-                    SharedPreferencesFlipperPlugin(
-                        this@MainApplication,
-                        "my_shared_preference_file"
-                    )
-                )
-                start()
+                addPlugin(SharedPreferencesFlipperPlugin(this@MainApplication, "my_shared_preference_file"))
+                 start()
             }
         }
     }

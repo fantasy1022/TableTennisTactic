@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.usecase.tactic.GetTacticUseCase
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.PlayerInsert
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_WIDTH
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_FLOOR_COLOR
@@ -43,10 +44,9 @@ class TacticViewModel(
 
     fun insertPlayerInfo(playerInfo: PlayerInfo) {
         viewModelScope.launch {
-
+            setTacticUseCase.execute(PlayerInsert(playerInfo))
         }
     }
-
 }
 
 data class TacticUiState(

@@ -16,6 +16,9 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.fantasyfang.tabletennistactic.R
 import com.fantasyfang.tabletennistactic.data.player.Team
+import com.fantasyfang.tabletennistactic.extension.getScreenHeightInDp
+import com.fantasyfang.tabletennistactic.extension.getScreenWidthInDp
+import com.fantasyfang.tabletennistactic.extension.toPx
 import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.ui.component.dialog.BrushWidthDialog
 import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
@@ -170,6 +173,10 @@ fun TacticScreen(
         }
 
         if (showTeamDialog) {
+            //get the center of the screen
+            val screenWidth = getScreenWidthInDp().toPx()
+            val screenHeight = getScreenHeightInDp().toPx()
+
             TeamSelectionDialog(
                 onTeamSelected = { team ->
                     val teamSize = uiState.player.filter { it.team == team }.size
@@ -180,7 +187,10 @@ fun TacticScreen(
                             team = team,
                             index = playerIndex,
                             name = "Player $playerIndex",
-                            offset = Offset.Zero
+                            offset = Offset(
+                                (screenHeight / 2),
+                                (screenHeight / 2)
+                            ),
                         )
                         mainViewModel.insertPlayerInfo(playerInfo)
                     }
