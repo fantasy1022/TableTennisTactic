@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -92,11 +94,11 @@ fun SettingScreen(
             item {
                 TableSettings(uiState.tableColor, uiState.floorColor, onCourtColorChange = {
                     settingViewModel.saveSetting(
-                        SetSettingsUseCase.SettingType.CourtColor(it)
+                        SetSettingsUseCase.SettingType.TableColor(it)
                     )
                 }, onBorderColorChange = {
                     settingViewModel.saveSetting(
-                        SetSettingsUseCase.SettingType.BorderColor(it)
+                        SetSettingsUseCase.SettingType.FloorColor(it)
                     )
                 })
             }
@@ -116,7 +118,9 @@ fun SettingScreen(
                     })
             }
             item {
-                PlayerSettings(playerIconRadius = uiState.playerIconRadius,
+                PlayerSettings(
+                    playerColor = uiState.team1Color,
+                    playerIconRadius = uiState.playerIconRadius,
                     isShowPlayerName = uiState.isShowPlayerName,
                     onSliderPositionChange = {
                         settingViewModel.saveSetting(
@@ -153,10 +157,10 @@ fun GeneralSettings(
                 Icon(
                     imageVector = Icons.Default.Face,
                     contentDescription = stringResource(id = R.string.prevent_sleep_title),
-                    tint = Color(0xFF6A994E)
+                    tint = MaterialTheme.colorScheme.surfaceTint
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Prevent sleep")
+                Text(stringResource(id = R.string.prevent_sleep_title))
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(checked = isPreventSleep, onCheckedChange = {
                     onPreventSleepChange(it)
@@ -264,6 +268,7 @@ fun TeamSettings(
 
 @Composable
 fun PlayerSettings(
+    playerColor: Color,
     playerIconRadius: Dp,
     isShowPlayerName: Boolean,
     onSliderPositionChange: (Dp) -> Unit,
@@ -281,7 +286,7 @@ fun PlayerSettings(
         ) {
             var sliderPositions by remember { mutableStateOf((playerIconRadius - PLAYER_ICON_RADIUS_MIN) / PLAYER_ICON_RADIUS_INTERVAL) }
 
-            LaunchedEffect(playerIconRadius) { //TODO:Check the snapshotFlow
+            LaunchedEffect(playerIconRadius) {
                 sliderPositions =
                     (playerIconRadius - PLAYER_ICON_RADIUS_MIN) / PLAYER_ICON_RADIUS_INTERVAL
                 snapshotFlow { sliderPositions }
@@ -292,30 +297,32 @@ fun PlayerSettings(
                 }, onValueChangeFinished = {
                     onSliderPositionChange((sliderPositions * PLAYER_ICON_RADIUS_INTERVAL.value + PLAYER_ICON_RADIUS_MIN.value).dp)
                 })
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .size((((sliderPositions * PLAYER_ICON_RADIUS_INTERVAL.value + PLAYER_ICON_RADIUS_MIN.value)) * 2).dp)
-                        .background(Color(0xFF6A994E), shape = CircleShape)
+                        .background(playerColor, shape = CircleShape)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+
                 AnimatedVisibility(
                     visible = isShowPlayerName,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        text = "Player1",
+                        stringResource(id = R.string.setting_player_name)
                     )
                 }
 
-                Row( //TODO: extract to a composable function
+                Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = stringResource(id = R.string.show_player_name_title),
-                        tint = Color(0xFF6A994E)
+                        tint = MaterialTheme.colorScheme.surfaceTint
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(id = R.string.show_player_name_title))

@@ -16,6 +16,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.fantasyfang.tabletennistactic.R
 import com.fantasyfang.tabletennistactic.data.player.Team
+import com.fantasyfang.tabletennistactic.extension.SetStatusSystemBarColor
 import com.fantasyfang.tabletennistactic.extension.getScreenHeightInDp
 import com.fantasyfang.tabletennistactic.extension.getScreenWidthInDp
 import com.fantasyfang.tabletennistactic.extension.toPx
@@ -76,6 +77,8 @@ fun TacticScreen(
             end.linkTo(parent.end)
             bottom.linkTo(settingIconView.top)
         }
+
+        SetStatusSystemBarColor(uiState.floorColor)
 
         FloorView(
             color = uiState.floorColor,

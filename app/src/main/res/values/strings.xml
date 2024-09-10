@@ -26,5 +26,6 @@
     <string name="player_settings_title">Edit player</string>
     <string name="player_settings_name">Name</string>
     <string name="player_settings_index">Index</string>
+    <string name="setting_player_name">Player 1</string>
 
 </resources>
