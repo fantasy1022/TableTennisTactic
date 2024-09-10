@@ -15,6 +15,8 @@ import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_PLAYER_ICO
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_TABLE_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_TEAM_1_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_TEAM_2_COLOR
+import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -24,6 +26,9 @@ class TacticViewModel(
     getTacticUseCase: GetTacticUseCase,
     private val setTacticUseCase: SetTacticUseCase
 ) : ViewModel() {
+
+    private val _paths = MutableStateFlow(PathUndoRedoList())
+    val paths: StateFlow<PathUndoRedoList> = _paths
 
     val uiState: StateFlow<TacticUiState> = getTacticUseCase.execute().stateIn(
         scope = viewModelScope,

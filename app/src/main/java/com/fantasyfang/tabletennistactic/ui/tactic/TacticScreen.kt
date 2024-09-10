@@ -57,7 +57,8 @@ fun TacticScreen(
 ) {
     val uiState = mainViewModel.uiState.collectAsState().value
     var drawMode by remember { mutableStateOf(DrawMode.Touch) }
-    val paths by remember { mutableStateOf(PathUndoRedoList()) } //TODO: Use savedPath
+    val savedPaths by mainViewModel.paths.collectAsState()
+    val paths by remember { mutableStateOf(savedPaths) }
     var showBrushWidthDialog by remember { mutableStateOf(false) }
     var showBrushColorDialog by remember { mutableStateOf(false) }
     var showTeamDialog by remember { mutableStateOf(false) }
