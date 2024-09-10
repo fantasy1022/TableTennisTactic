@@ -27,6 +27,23 @@ fun <T> DataStore<Preferences>.getData(
         }
 }
 
+fun DataStore<Preferences>.getColorData(
+    key: Preferences.Key<Int>, defaultColor: Color,
+): Flow<Color> {
+    return this.data
+        .catch {
+            if (it is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            val colorInt = preferences[key] ?: defaultColor.toArgb()
+            Color(colorInt)
+        }
+}
+
 fun Preferences.getColor(key: Preferences.Key<Int>, defaultColor: Color): Color {
     val colorInt = this[key] ?: defaultColor.toArgb()
     return Color(colorInt)

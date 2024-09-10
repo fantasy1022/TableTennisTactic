@@ -38,6 +38,7 @@ fun SettingBarView(
     modifier: Modifier,
     uiState: TacticUiState,
     drawMode: DrawMode,
+    onSettingIconClick: () -> Unit,
     onEditIconClick: () -> Unit,
     onBrushWidthClick: () -> Unit,
     onBrushColorClick: () -> Unit,
@@ -56,7 +57,7 @@ fun SettingBarView(
             .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
     ) {
-        SettingIconView()
+        SettingIconView(onSettingIconClick)
         AddPlayerIconView(onAddPlayerClick)
         AnimateIcon(drawModeTransition) {
             BrushWidthIconView(
@@ -115,8 +116,10 @@ private fun UndoIconView(onPathUndo: () -> Unit) {
 }
 
 @Composable
-private fun SettingIconView() {
-    IconButton(onClick = {}) {
+private fun SettingIconView(onSettingIconClick: () -> Unit) {
+    IconButton(onClick = {
+        onSettingIconClick.invoke()
+    }) {
         Icon(
             Icons.Default.Settings, contentDescription = "Settings", tint = Color.White
         )

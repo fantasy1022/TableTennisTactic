@@ -36,6 +36,7 @@ import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_RADIUS
 import com.fantasyfang.tabletennistactic.util.Const.Companion.MAX_PLAYER_INDEX
 import com.fantasyfang.tabletennistactic.util.DrawMode
+import com.fantasyfang.tabletennistactic.util.NavigationRoute
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,6 +95,9 @@ fun TacticScreen(
             settingIconViewModifier,
             uiState = uiState,
             drawMode = drawMode,
+            onSettingIconClick = {
+                navController.navigate(NavigationRoute.SETTING.route)
+            },
             onEditIconClick = {
                 drawMode = if (drawMode != DrawMode.Draw) DrawMode.Draw else DrawMode.Touch
             },
@@ -188,7 +192,7 @@ fun TacticScreen(
                             index = playerIndex,
                             name = "Player $playerIndex",
                             offset = Offset(
-                                (screenHeight / 2),
+                                (screenWidth / 2),
                                 (screenHeight / 2)
                             ),
                         )

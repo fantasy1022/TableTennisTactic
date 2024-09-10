@@ -9,7 +9,22 @@
     <string name="brush_width_value">Current value</string>
 
     <string name="brush_color_title">Brush color</string>
+    <string name="table_color_title">Table color</string>
+    <string name="floor_color_title">Floor color</string>
 
+    <string name="setting_title">Setting</string>
+    <string name="general_title">General</string>
+    <string name="prevent_sleep_title">Prevent sleep</string>
+    <string name="court_title">Court</string>
+    <string name="court_color_title">Court color</string>
+    <string name="border_color_title">Border color</string>
     <string name="team_title">Team</string>
+    <string name="team_1_color_title">Team1 color</string>
+    <string name="team_2_color_title">Team2 color</string>
+    <string name="player_title">Player</string>
+    <string name="show_player_name_title">Show player name</string>
+    <string name="player_settings_title">Edit player</string>
+    <string name="player_settings_name">Name</string>
+    <string name="player_settings_index">Index</string>
 
 </resources>

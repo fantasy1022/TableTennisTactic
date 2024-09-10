@@ -10,7 +10,12 @@ import com.fantasyfang.tabletennistactic.repository.player.PlayerDatabase
 import com.fantasyfang.tabletennistactic.repository.player.PlayerMapper
 import com.fantasyfang.tabletennistactic.repository.player.PlayerRepository
 import com.fantasyfang.tabletennistactic.repository.player.PlayerRepositoryImpl
+import com.fantasyfang.tabletennistactic.repository.setting.SettingRepository
+import com.fantasyfang.tabletennistactic.repository.setting.SettingRepositoryImpl
+import com.fantasyfang.tabletennistactic.ui.setting.SettingViewModel
 import com.fantasyfang.tabletennistactic.ui.tactic.TacticViewModel
+import com.fantasyfang.tabletennistactic.usecase.setting.GetSettingsUseCase
+import com.fantasyfang.tabletennistactic.usecase.setting.SetSettingsUseCase
 import com.fantasyfang.tabletennistactic.usecase.tactic.GetTacticUseCase
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase
 import org.koin.android.ext.koin.androidContext
@@ -23,15 +28,20 @@ import org.koin.dsl.module
 
 val appModule = module {
     singleOf(::PlayerMapper)
-    singleOf(::PlayerRepositoryImpl) { bind<PlayerRepository>() }
     single { PlayerDatabase.getDatabase(androidContext()).playerDao() }
-
-    singleOf(::BrushRepositoryImpl) { bind<BrushRepository>() }
     single<DataStore<Preferences>> { androidContext().dataStore }
+
+    singleOf(::PlayerRepositoryImpl) { bind<PlayerRepository>() }
+    singleOf(::BrushRepositoryImpl) { bind<BrushRepository>() }
+    singleOf(::SettingRepositoryImpl) { bind<SettingRepository>() }
 
     factoryOf(::GetTacticUseCase)
     factoryOf(::SetTacticUseCase)
     viewModelOf(::TacticViewModel)
+
+    factoryOf(::GetSettingsUseCase)
+    factoryOf(::SetSettingsUseCase)
+    viewModelOf(::SettingViewModel)
 }
 private const val USER_PREFERENCE_NAME = "user_preferences"
 

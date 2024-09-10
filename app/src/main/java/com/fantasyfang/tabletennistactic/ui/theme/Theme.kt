@@ -1,8 +1,8 @@
 package com.fantasyfang.tabletennistactic.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -34,11 +34,11 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TabletennistacticNewTheme(
+fun TableTennisTacticNewTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable (colorScheme: ColorScheme) -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -53,6 +53,6 @@ fun TabletennistacticNewTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = { content(colorScheme) }
     )
 }
