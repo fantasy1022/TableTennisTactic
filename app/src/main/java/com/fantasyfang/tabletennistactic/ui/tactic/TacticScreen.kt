@@ -47,7 +47,6 @@ import com.fantasyfang.tabletennistactic.util.Const.Companion.MAX_PLAYER_INDEX
 import com.fantasyfang.tabletennistactic.util.Debouncer
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.NavigationRoute
-import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
