@@ -23,7 +23,10 @@ import java.util.Locale
 
 @Composable
 fun BrushWidthDialog(
-    brushSize: Float, onBrushSizeChange: (Float) -> Unit, onDismissRequest: () -> Unit
+    brushColor: Color,
+    brushSize: Float,
+    onBrushSizeChange: (Float) -> Unit,
+    onDismissRequest: () -> Unit
 ) {
     val formattedBrushSize = String.format(Locale.getDefault(), "%.1f", brushSize)
 
@@ -38,7 +41,7 @@ fun BrushWidthDialog(
                         .wrapContentHeight()
                 ) {
                     drawLine(
-                        color = Color.Black,
+                        color = brushColor,
                         start = Offset(x = 0f, y = size.height),
                         end = Offset(x = size.width, y = size.height),
                         strokeWidth = brushSize,

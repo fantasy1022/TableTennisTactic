@@ -178,9 +178,12 @@ fun TacticScreen(
         }
 
         if (showBrushWidthDialog) {
-            BrushWidthDialog(brushSize = uiState.brushWidth, onBrushSizeChange = { width ->
-                mainViewModel.updateSetting(BrushWidth(width))
-            }, onDismissRequest = { showBrushWidthDialog = false })
+            BrushWidthDialog(
+                brushColor = uiState.brushColor,
+                brushSize = uiState.brushWidth,
+                onBrushSizeChange = { width ->
+                    mainViewModel.updateSetting(BrushWidth(width))
+                }, onDismissRequest = { showBrushWidthDialog = false })
         }
 
         if (showBrushColorDialog) {

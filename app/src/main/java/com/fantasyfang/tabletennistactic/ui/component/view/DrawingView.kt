@@ -86,7 +86,7 @@ fun DrawingView(
 
                 MotionEvent.Move -> {
                     if (drawMode != DrawMode.Touch) {
-                        currentPath.quadraticBezierTo(
+                        currentPath.quadraticTo(
                             previousPosition.x,
                             previousPosition.y,
                             (previousPosition.x + currentPosition.x) / 2,
@@ -100,19 +100,16 @@ fun DrawingView(
                 MotionEvent.Up -> {
                     if (drawMode != DrawMode.Touch) {
                         currentPath.lineTo(currentPosition.x, currentPosition.y)
-                        paths.add(Pair(currentPath, currentPathProperty))
-
-                        // Since paths are keys for map, use new one for each key
-                        // and have separate path for each down-move-up gesture cycle
-                        currentPath = Path()
-
-                        // Create new instance of path properties to have new path and properties
-                        // only for the one currently being drawn
                         currentPathProperty = PathProperties(
                             strokeWidth = uiState.brushWidth,
                             color = uiState.brushColor,
                             eraseMode = currentPathProperty.eraseMode
                         )
+                        paths.add(Pair(currentPath, currentPathProperty))
+
+                        // Since paths are keys for map, use new one for each key
+                        // and have separate path for each down-move-up gesture cycle
+                        currentPath = Path()
                     }
 
                     // If we leave this state at MotionEvent.Up it causes current path to draw
@@ -153,14 +150,17 @@ fun DrawingView(
                             color = uiState.brushColor,
                             path = currentPath,
                             style = Stroke(
-                                width = currentPathProperty.strokeWidth,
+                                width = uiState.brushWidth,
                             )
                         )
                     } else {
                         drawPath(
-                            color = Color.Transparent, path = currentPath, style = Stroke(
-                                width = currentPathProperty.strokeWidth,
-                            ), blendMode = BlendMode.Clear
+                            color = Color.Transparent,
+                            path = currentPath,
+                            style = Stroke(
+                                width = uiState.brushWidth,
+                            ),
+                            blendMode = BlendMode.Clear
                         )
                     }
                 }
