@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.usecase.tactic.GetTacticUseCase
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase
-import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.PlayerInsert
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BRUSH_WIDTH
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_FLOOR_COLOR
@@ -24,8 +23,7 @@ import kotlinx.coroutines.launch
 class TacticViewModel(
     getTacticUseCase: GetTacticUseCase,
     private val setTacticUseCase: SetTacticUseCase
-) :
-    ViewModel() {
+) : ViewModel() {
 
     val uiState: StateFlow<TacticUiState> = getTacticUseCase.execute().stateIn(
         scope = viewModelScope,
@@ -36,17 +34,16 @@ class TacticViewModel(
         initialValue = TacticUiState()
     )
 
-    fun saveSetting(setTacTicType: SetTacticUseCase.SetTacticType) {
+    fun updateSetting(setTacTicType: SetTacticUseCase.SetTacticType) {
         viewModelScope.launch {
             setTacticUseCase.execute(setTacTicType)
         }
     }
 
-    fun insertPlayerInfo(playerInfo: PlayerInfo) {
-        viewModelScope.launch {
-            setTacticUseCase.execute(PlayerInsert(playerInfo))
-        }
+    fun getPlayerInfo(playerId: Int): PlayerInfo? {
+        return uiState.value.player.find { it.id == playerId }
     }
+
 }
 
 data class TacticUiState(

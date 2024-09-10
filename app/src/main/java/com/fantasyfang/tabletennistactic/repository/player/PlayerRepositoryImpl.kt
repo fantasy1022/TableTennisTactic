@@ -28,7 +28,7 @@ class PlayerRepositoryImpl(
     override suspend fun deletePlayer(playerId: Int) = itemDao.delete(playerId)
 
     override suspend fun updatePlayer(playerInfo: PlayerInfo) {
-        itemDao.update(playerMapper.toPlayer(playerInfo))
+        itemDao.insert(playerMapper.toPlayer(playerInfo))
     }
 
     override suspend fun updatePlayerPosition(playerId: Int, newPosition: Offset) {

@@ -3,6 +3,7 @@ package com.fantasyfang.tabletennistactic.ui.component.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -75,8 +76,14 @@ fun PlayerView(
         )
 
         if (isShowPlayerName) {
+            drawRect(
+                color = Color.Transparent,
+                topLeft = Offset(playerRadius.toPx(), playerRadius.toPx()),
+                size = Size(5.dp.toPx(), 5.dp.toPx())
+            )
+
             val textPositionX = playerRadius.toPx() - playerTextLayoutResult.size.width / 2
-            val textPositionY = playerRadius.toPx() * 2
+            val textPositionY = playerRadius.toPx() * 2 + 5.dp.toPx()
             drawText(
                 textMeasurer = playerTextMeasurer,
                 text = playerTextToDraw,

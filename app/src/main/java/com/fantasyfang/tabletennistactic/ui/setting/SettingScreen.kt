@@ -1,6 +1,5 @@
 package com.fantasyfang.tabletennistactic.ui.setting
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -48,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fantasyfang.tabletennistactic.R
 import com.fantasyfang.tabletennistactic.extension.SetStatusSystemBarColor
-
 import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
 import com.fantasyfang.tabletennistactic.ui.theme.FloorColorList
 import com.fantasyfang.tabletennistactic.ui.theme.TableColorList
@@ -56,7 +54,6 @@ import com.fantasyfang.tabletennistactic.ui.theme.TeamColorList
 import com.fantasyfang.tabletennistactic.usecase.setting.SetSettingsUseCase
 import com.fantasyfang.tabletennistactic.util.Const.Companion.PLAYER_ICON_RADIUS_INTERVAL
 import com.fantasyfang.tabletennistactic.util.Const.Companion.PLAYER_ICON_RADIUS_MIN
-
 import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalMaterial3Api
@@ -103,7 +100,6 @@ fun SettingScreen(
                 })
             }
             item {
-                Log.d("Fam", "TeamSettings: ${uiState.team1Color} ${uiState.team2Color}")
                 TeamSettings(team1Color = uiState.team1Color,
                     team2Color = uiState.team2Color,
                     onTeam1ColorChange = {

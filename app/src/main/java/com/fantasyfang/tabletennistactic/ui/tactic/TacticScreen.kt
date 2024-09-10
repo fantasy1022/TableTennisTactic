@@ -1,5 +1,6 @@
 package com.fantasyfang.tabletennistactic.ui.tactic
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
@@ -7,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,6 +25,7 @@ import com.fantasyfang.tabletennistactic.extension.toPx
 import com.fantasyfang.tabletennistactic.repository.player.PlayerInfo
 import com.fantasyfang.tabletennistactic.ui.component.dialog.BrushWidthDialog
 import com.fantasyfang.tabletennistactic.ui.component.dialog.ColorSelectDialog
+import com.fantasyfang.tabletennistactic.ui.component.dialog.PlayerSettingDialog
 import com.fantasyfang.tabletennistactic.ui.component.dialog.TeamSelectionDialog
 import com.fantasyfang.tabletennistactic.ui.component.view.BallView
 import com.fantasyfang.tabletennistactic.ui.component.view.DrawingView
@@ -31,11 +34,17 @@ import com.fantasyfang.tabletennistactic.ui.component.view.PlayerView
 import com.fantasyfang.tabletennistactic.ui.component.view.SettingBarView
 import com.fantasyfang.tabletennistactic.ui.component.view.TennisTableView
 import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushColor
 import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.BrushWidth
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.PlayerInsert
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.PlayerPosition
+import com.fantasyfang.tabletennistactic.usecase.tactic.SetTacticUseCase.SetTacticType.PlayerUpdate
+import com.fantasyfang.tabletennistactic.util.Const.Companion.DEBOUNCER_DELAY
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_COLOR
 import com.fantasyfang.tabletennistactic.util.Const.Companion.DEFAULT_BALL_RADIUS
 import com.fantasyfang.tabletennistactic.util.Const.Companion.MAX_PLAYER_INDEX
+import com.fantasyfang.tabletennistactic.util.Debouncer
 import com.fantasyfang.tabletennistactic.util.DrawMode
 import com.fantasyfang.tabletennistactic.util.NavigationRoute
 import com.fantasyfang.tabletennistactic.util.PathUndoRedoList
@@ -52,6 +61,10 @@ fun TacticScreen(
     var showBrushWidthDialog by remember { mutableStateOf(false) }
     var showBrushColorDialog by remember { mutableStateOf(false) }
     var showTeamDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val debouncer = remember { Debouncer(coroutineScope) }
+    var showPlayerDialog by remember { mutableStateOf(false) }
+    var selectedPlayerId by remember { mutableStateOf<Int?>(null) }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -94,8 +107,7 @@ fun TacticScreen(
             paths = paths,
         )
 
-        SettingBarView(
-            settingIconViewModifier,
+        SettingBarView(settingIconViewModifier,
             uiState = uiState,
             drawMode = drawMode,
             onSettingIconClick = {
@@ -124,8 +136,7 @@ fun TacticScreen(
             },
             onAddPlayerClick = {
                 showTeamDialog = true
-            }
-        )
+            })
 
         BallView(
             ballRadius = DEFAULT_BALL_RADIUS,
@@ -138,33 +149,38 @@ fun TacticScreen(
             } else {
                 uiState.team2Color
             }
-
             PlayerView(
-                playerInfo,
+                playerInfo = playerInfo,
                 backgroundColor = backgroundColor,
                 playerRadius = uiState.playerIconRadius,
                 isShowPlayerName = uiState.isShowPlayerName,
                 initialPosition = uiState.player[index].offset,
                 onPositionChange = { position ->
-
+                    debouncer.debounce(DEBOUNCER_DELAY) {
+                        playerInfo.id?.let {
+                            mainViewModel.updateSetting(
+                                PlayerPosition(it, position)
+                            )
+                        }
+                    }
                 },
                 onClick = {
-
+                    Log.d("Fam", "PlayerView onClick: ${playerInfo.id}")
+                    Log.d("Fam", "PlayerView onClick selectedPlayerId: $selectedPlayerId")
+                    selectedPlayerId = playerInfo.id
+                    showPlayerDialog = true
                 },
                 onDoubleClick = {
-
-                }
-            )
+                    playerInfo.id?.let {
+                        mainViewModel.updateSetting(SetTacticType.PlayerDelete(it))
+                    }
+                })
         }
 
         if (showBrushWidthDialog) {
-            BrushWidthDialog(
-                brushSize = uiState.brushWidth,
-                onBrushSizeChange = { width ->
-                    //TODO: Save brush width
-                    mainViewModel.saveSetting(BrushWidth(width))
-                },
-                onDismissRequest = { showBrushWidthDialog = false })
+            BrushWidthDialog(brushSize = uiState.brushWidth, onBrushSizeChange = { width ->
+                mainViewModel.updateSetting(BrushWidth(width))
+            }, onDismissRequest = { showBrushWidthDialog = false })
         }
 
         if (showBrushColorDialog) {
@@ -173,7 +189,7 @@ fun TacticScreen(
                 selectedColor = uiState.brushColor,
                 colorList = BrushColorList,
                 onColorSelect = { color: Color ->
-                    mainViewModel.saveSetting(BrushColor(color))
+                    mainViewModel.updateSetting(BrushColor(color))
                 },
                 onDismissRequest = { showBrushColorDialog = false },
             )
@@ -184,29 +200,41 @@ fun TacticScreen(
             val screenWidth = getScreenWidthInDp().toPx()
             val screenHeight = getScreenHeightInDp().toPx()
 
-            TeamSelectionDialog(
-                onTeamSelected = { team ->
-                    val teamSize = uiState.player.filter { it.team == team }.size
-                    val playerIndex = teamSize + 1
-                    if (playerIndex <= MAX_PLAYER_INDEX) {
-                        val playerInfo = PlayerInfo(
-                            id = null,
-                            team = team,
-                            index = playerIndex,
-                            name = "Player $playerIndex",
-                            offset = Offset(
-                                (screenWidth / 2),
-                                (screenHeight / 2)
-                            ),
-                        )
-                        mainViewModel.insertPlayerInfo(playerInfo)
-                    }
-                    showTeamDialog = false
+            TeamSelectionDialog(onTeamSelected = { team ->
+                val teamSize = uiState.player.filter { it.team == team }.size
+                val playerIndex = teamSize + 1
+                if (playerIndex <= MAX_PLAYER_INDEX) {
+                    val playerInfo = PlayerInfo(
+                        id = null,
+                        team = team,
+                        index = playerIndex,
+                        name = "Player $playerIndex",
+                        offset = Offset(
+                            (screenWidth / 2), (screenHeight / 2)
+                        ),
+                    )
+                    mainViewModel.updateSetting(PlayerInsert(playerInfo))
+                }
+                showTeamDialog = false
+            }, onDismissRequest = {
+                showTeamDialog = false
+            })
+        }
+
+        if (showPlayerDialog) {
+            val playerInfo =
+                mainViewModel.getPlayerInfo(selectedPlayerId ?: return@ConstraintLayout)
+                    ?: return@ConstraintLayout
+            PlayerSettingDialog(playerInfo = playerInfo,
+                onPlayerInfoChange = { updatedPlayerInfo ->
+                    mainViewModel.updateSetting(
+                        PlayerUpdate(updatedPlayerInfo)
+                    )
+                    showPlayerDialog = false
                 },
                 onDismissRequest = {
-                    showTeamDialog = false
-                }
-            )
+                    showPlayerDialog = false
+                })
         }
 
     }

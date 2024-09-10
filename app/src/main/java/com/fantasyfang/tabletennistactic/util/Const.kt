@@ -6,7 +6,6 @@ import com.fantasyfang.tabletennistactic.ui.theme.FloorColorList
 import com.fantasyfang.tabletennistactic.ui.theme.BrushColorList
 import com.fantasyfang.tabletennistactic.ui.theme.TableColorList
 import com.fantasyfang.tabletennistactic.ui.theme.TeamColorList
-import com.fantasyfang.tabletennistactic.ui.theme.YELLOW_A700
 
 class Const {
     companion object {
@@ -14,6 +13,7 @@ class Const {
         const val TABLE_HEIGHT_WIDTH_RATIO = 1.79f //Height: 274cm, Width: 152.5cm
         const val MAX_PLAYER_INDEX = 2
 
+        val DEBOUNCER_DELAY = 500L
         val DEFAULT_IS_PREVENT_SLEEP = true
         val DEFAULT_BRUSH_WIDTH = 10f
         val DEFAULT_BRUSH_COLOR = BrushColorList.last()
