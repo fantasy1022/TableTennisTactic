@@ -61,9 +61,9 @@ jobs:
     # 8. 提取版本號
     - name: Extract version name
       id: extract_version
-      run: | 
-           VERSION_NAME=$(grep versionName app/build.gradle | awk -F'"' '{print $2}')
-           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV 
+      run: |
+          VERSION_NAME=$(grep versionName app/build.gradle | sed 's/versionName //;s/"//g')
+          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
 
     # 9. 獲取當前日期和時間
     - name: Get current date and time
@@ -90,13 +90,13 @@ jobs:
     - name: Upload Debug APK
       uses: actions/upload-artifact@v3
       with:
-        name: debug-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}
+        name: debug-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
         path: app/build/outputs/apk/debug/app-debug-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
 
     # 13. 上傳重命名後的 Release APK 作為構建產物
     - name: Upload Release APK
       uses: actions/upload-artifact@v3
       with:
-        name: release-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}
+        name: release-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
         path: app/build/outputs/apk/release/app-release-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
 
