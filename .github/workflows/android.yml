@@ -68,7 +68,7 @@ jobs:
     - name: Extract version name using Gradle task
       id: extract_version
       run: |
-          VERSION_NAME=$(./gradlew printVersionName | grep -m1 -o '[0-9]\+$\.[0-9]\+$*')
+          VERSION_NAME_AWK=$(awk -F'"' '/versionName/ {print $2}' app/build.gradle.kts)
           echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
 
     # 9. 獲取當前日期和時間
