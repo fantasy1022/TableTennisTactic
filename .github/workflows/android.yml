@@ -69,7 +69,7 @@ jobs:
     - name: Get current date and time
       id: get_datetime
       run: | 
-          DATETIME=$(date +%Y%m%d-%H%M%S)
+          DATETIME=$(date +%Y%m%d-%H%M)
           echo "DATETIME=$DATETIME" >> $GITHUB_ENV
 
     # 10. 修改 Debug APK 的名稱，加入版本和時間
@@ -87,11 +87,11 @@ jobs:
           mv "$ORIGINAL_APK" "$NEW_APK"
 
     # 12. 上傳重命名後的 Debug APK 作為構建產物
-    - name: Upload Release APK
+    - name: Upload Debug APK
       uses: actions/upload-artifact@v3
       with:
         name: debug-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}
-        path: app/build/outputs/apk/release/app-debug-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+        path: app/build/outputs/apk/debug/app-debug-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
 
     # 13. 上傳重命名後的 Release APK 作為構建產物
     - name: Upload Release APK
