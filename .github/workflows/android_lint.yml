@@ -1,4 +1,6 @@
 name: Android Lint Check
+permissions:
+  pull-requests: write
 
 on:
   pull_request:
@@ -47,4 +49,16 @@ jobs:
         with:
           header: "Android Lint Results"
           path: app/build/reports/lint-results-debug.xml  # 根據你的項目結構調整
+          append: false
+          recreate: false
+          delete: false
+          only_create: false
+          only_update: false
+          hide_details: false
+          hide: false
+          hide_and_recreate: false
+          hide_classify: OUTDATED
+          ignore_empty: false
+          skip_unchanged: false
+          follow_symbolic_links: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
