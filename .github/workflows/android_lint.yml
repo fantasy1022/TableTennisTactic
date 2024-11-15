@@ -1,31 +1,49 @@
-name: AndroidLint
+name: Android Lint Check
 
 on:
   pull_request:
-    paths:
-      - .github/workflows/android-lint.yml
-      - '*/src/**'
-      - gradle/**
-      - '**.gradle'
-      - gradle.properties
-      - gradlew*
+    branches:
+      - main
+      - develop
 
 jobs:
-  android-lint:
+  lint:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          fetch-depth: 1
-      - name: set up JDK
-        uses: actions/setup-java@v4
+          distribution: 'temurin' # 可以根據需要選擇適當的分發版，例如 temurin、adopt、zulu 等
+          java-version: '17'
+
+
+      - name: Download Android SDK
+        uses: android-actions/setup-android@v2
         with:
-          distribution: zulu
-          java-version: 21
-          cache: gradle
-      - run: ./gradlew lint
-      - uses: yutailang0119/action-android-lint@v4
+          api-level: 33
+          target: default
+          arch: x64
+          cache: true
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Run Lint
+        run: ./gradlew lint
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v3
         with:
-          report-path: build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-          ignore-warnings: false # Ignore Lint Warnings
-        continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
+          name: lint-report
+          path: app/build/reports/lint-results.xml
+
+      - name: Publish Lint Results
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: "Android Lint Results"
+          path: app/build/reports/lint-results.xml
