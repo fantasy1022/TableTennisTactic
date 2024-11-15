@@ -20,7 +20,6 @@ jobs:
           distribution: 'temurin' # 可以根據需要選擇適當的分發版，例如 temurin、adopt、zulu 等
           java-version: '17'
 
-
       - name: Download Android SDK
         uses: android-actions/setup-android@v2
         with:
@@ -39,11 +38,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: lint-report
-          path: app/build/reports/lint-results.xml
+          path: app/build/reports/lint-results-debug.xml
 
       - name: Publish Lint Results
         if: always()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: "Android Lint Results"
-          path: app/build/reports/lint-results.xml
+          path: app/build/reports/lint-results-debug.xml
