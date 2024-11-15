@@ -58,16 +58,51 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: ./gradlew assembleRelease    
 
-    # 8. 上傳 Debug 版 APK
-    - name: Upload Debug APK  
-      uses: actions/upload-artifact@v3  
-      with:  
-        name: debug-apk  
-        path: app/build/outputs/apk/debug/app-debug.apk  
+    # 8. 提取版本號
+    # - name: Extract version name
+      # id: extract_version
+      # run: |
+      #     VERSION_NAME=$(grep versionName app/build.gradle | sed 's/versionName //;s/"//g')
+      #     echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
 
-    # 9. 上傳 Release 版 APK
+    - name: Extract version name using Gradle task
+      id: extract_version
+      run: |
+          VERSION_NAME_AWK=$(awk -F'"' '/versionName/ {print $2}' app/build.gradle.kts)
+          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
+
+    # 9. 獲取當前日期和時間
+    - name: Get current date and time
+      id: get_datetime
+      run: | 
+          DATETIME=$(date +%Y%m%d-%H%M)
+          echo "DATETIME=$DATETIME" >> $GITHUB_ENV
+
+    # 10. 修改 Debug APK 的名稱，加入版本和時間
+    - name: Rename Release APK
+      run: |
+          ORIGINAL_APK=app/build/outputs/apk/debug/app-debug.apk
+          NEW_APK=app/build/outputs/apk/debug/app-debug-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+          mv "$ORIGINAL_APK" "$NEW_APK"
+
+    # 11. 修改 Release APK 的名稱，加入版本和時間
+    - name: Rename Release APK
+      run: |
+          ORIGINAL_APK=app/build/outputs/apk/release/app-release.apk
+          NEW_APK=app/build/outputs/apk/release/app-release-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+          mv "$ORIGINAL_APK" "$NEW_APK"
+
+    # 12. 上傳重命名後的 Debug APK 作為構建產物
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: debug-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+        path: app/build/outputs/apk/debug/app-debug-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+
+    # 13. 上傳重命名後的 Release APK 作為構建產物
     - name: Upload Release APK
       uses: actions/upload-artifact@v3
       with:
-        name: release-apk
-        path: app/build/outputs/apk/release/app-release.apk
+        name: release-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+        path: app/build/outputs/apk/release/app-release-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+
