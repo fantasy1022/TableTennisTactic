@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: lint-report
-          path: app/build/reports/lint-results-debug.xml
+          path: app/build/reports/lint-results-debug.html
 
       # 步驟7：發布 Lint 結果到 PR
       - name: Publish Lint Results
@@ -48,7 +48,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2.9.0
         with:
           header: "Android Lint Results"
-          path: app/build/reports/lint-results-debug.xml  # 根據你的項目結構調整
+          path: app/build/reports/lint-results-debug.html  # 根據你的項目結構調整
           append: false
           recreate: false
           delete: false
