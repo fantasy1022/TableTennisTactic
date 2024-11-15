@@ -1,2 +1,64 @@
-name: GitHub Action for Android Lint
-uses: yutailang0119/action-android-lint@v4.0.0
+name: Android Lint Check
+permissions:
+  pull-requests: write
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # 可以根據需要選擇適當的分發版，例如 temurin、adopt、zulu 等
+          java-version: '17'
+
+      - name: Download Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          target: default
+          arch: x64
+          cache: true
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Run Lint
+        run: ./gradlew lint
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.html
+
+      # 步驟7：發布 Lint 結果到 PR
+      - name: Publish Lint Results
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2.9.0
+        with:
+          header: "Android Lint Results"
+          path: app/build/reports/lint-results-debug.html  # 根據你的項目結構調整
+          append: false
+          recreate: false
+          delete: false
+          only_create: false
+          only_update: false
+          hide_details: false
+          hide: false
+          hide_and_recreate: false
+          hide_classify: OUTDATED
+          ignore_empty: false
+          skip_unchanged: false
+          follow_symbolic_links: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
