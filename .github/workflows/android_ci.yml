@@ -115,7 +115,7 @@ jobs:
             "https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID/artifacts")
 
           # 提取工件的下載 URL
-          ARTIFACT_DOWNLOAD_URL=$(echo "$ARTIFACTS_JSON" | jq -r --arg NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $NAME) | .archive_download_url')
+          # ARTIFACT_DOWNLOAD_URL=$(echo "$ARTIFACTS_JSON" | jq -r --arg NAME "$ARTIFACT_NAME" '.artifacts[] | select(.name == $NAME) | .archive_download_url')
 
           # 構建帶有認證的下載鏈接
           LINT_LINK="https://api.github.com/repos/$OWNER/$REPO/actions/artifacts/$ARTIFACT_DOWNLOAD_URL/zip"
@@ -170,3 +170,5 @@ jobs:
         with:
           name: release-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
           path: app/build/outputs/apk/release/app-release-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
+      
+     # add 
