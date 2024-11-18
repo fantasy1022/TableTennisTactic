@@ -41,29 +41,17 @@ jobs:
         if: github.event_name == 'pull_request'
         run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
-      - name: Extract Version Number
-        id: get_version
-        run: |
-          VERSION_NAME=$(grep versionName app/build.gradle.kts | awk '{print $2}' | tr -d \")
-          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
-
       - name: Set Artifact Name
         id: set_artifact_name
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            ARTIFACT_NAME="lint-report-pr-${PR_NUMBER}-v-${VERSION_NAME}"
-          else
-            ARTIFACT_NAME="lint-report-v-${VERSION_NAME}"
-          fi
-          echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
+            ARTIFACT_NAME="lint-report-pr-${PR_NUMBER}"
+            echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
 
       - name: Upload Lint Report
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: app/build/reports/lint-results-debug.html
-
-        
 
       # - name: Upload Lint Report
       #   uses: actions/upload-artifact@v3
