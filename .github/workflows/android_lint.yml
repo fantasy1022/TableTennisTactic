@@ -2,13 +2,16 @@ name: Android Lint Check
 permissions:
   pull-requests: write
 
-on:
-  pull_request:
-    branches:
-      - main
+on:  
+  push:  
+    branches:  
+      - main  
+  pull_request:  
+    branches:  
+      - main  
 
 jobs:
-  lint2:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +27,7 @@ jobs:
       - name: Download Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 33
+          api-level: 34
           target: default
           arch: x64
           cache: true
