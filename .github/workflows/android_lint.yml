@@ -42,11 +42,50 @@ jobs:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
 
-      - name: Publish Lint Results with Link
-        if: always()
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: "Android Lint Results"
-          message: |
-            [View Detailed HTML Report](https://${{ github.repository_owner }}.github.io/${{ github.repository }}/lint-results-debug.html)
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch Artifact URLs
+        id: fetch_artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 設定變量
+          OWNER=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f1)
+          REPO=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f2)
+          RUN_ID=${{ github.run_id }}
+
+          # 使用 GitHub API 獲取工件列表
+          ARTIFACTS_JSON=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID/artifacts")
+
+          # 提取 lint-report-xml 和 lint-report-html 的下載 URL
+          LINT_XML_URL=$(echo "$ARTIFACTS_JSON" | jq -r '.artifacts[] | select(.name=="lint-report-xml") | .archive_download_url')
+          LINT_HTML_URL=$(echo "$ARTIFACTS_JSON" | jq -r '.artifacts[] | select(.name=="lint-report-html") | .archive_download_url')
+
+          # 將下載 URL 存儲為環境變量
+          echo "lint_xml_url=$LINT_XML_URL" >> $GITHUB_ENV
+          echo "lint_html_url=$LINT_HTML_URL" >> $GITHUB_ENV
+
+      - name: Post Artifact Links to PR
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINT_XML_URL: ${{ env.lint_xml_url }}
+          LINT_HTML_URL: ${{ env.lint_html_url }}
+        run: |
+          # 獲取 PR 信息
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          
+          # 構建下載鏈接（需要攜帶認證）
+          # 注意：這些鏈接需要認證，使用者可能需要在瀏覽器中登錄 GitHub 並具備倉庫訪問權限
+          LINT_XML_LINK="$LINT_XML_URL"
+          LINT_HTML_LINK="$LINT_HTML_URL"
+
+          # 構建評論內容
+          COMMENT="### Android Lint Report
+          - [Download Lint XML Report](${LINT_XML_LINK})
+          - [Download Lint HTML Report](${LINT_HTML_LINK})"
+
+          # 發布評論到 PR
+          curl -s -H "Authorization: token $GITHUB_TOKEN" \
+               -X POST \
+               -d "{\"body\": \"$COMMENT\"}" \
+               "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
