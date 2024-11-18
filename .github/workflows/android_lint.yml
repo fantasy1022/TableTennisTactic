@@ -24,7 +24,7 @@ jobs:
       - name: Download Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 33
+          api-level: 34
           target: default
           arch: x64
           cache: true
