@@ -41,3 +41,12 @@ jobs:
         with:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
+
+      - name: Publish Lint Results with Link
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: "Android Lint Results"
+          message: |
+            [View Detailed HTML Report](https://${{ github.repository_owner }}.github.io/${{ github.repository }}/lint-results-debug.html)
+          github-token: ${{ secrets.GITHUB_TOKEN }}
