@@ -1,4 +1,4 @@
-name: Android CI  
+name: Android Build
 
 on:  
   push:  
@@ -10,7 +10,6 @@ on:
 
 jobs:  
   build:  
-
     runs-on: ubuntu-latest  
 
     env:  
@@ -33,7 +32,7 @@ jobs:
     - name: Download Android SDK  
       uses: android-actions/setup-android@v2  
       with:  
-        api-level: 33  
+        api-level: 34  
         target: default  
         arch: x64  
         cache: true  
@@ -75,7 +74,7 @@ jobs:
     - name: Get current date and time
       id: get_datetime
       run: | 
-          DATETIME=$(date +%Y%m%d-%H%M)
+          DATETIME=$(date +%Y%m%d)
           echo "DATETIME=$DATETIME" >> $GITHUB_ENV
 
     # 10. 修改 Debug APK 的名稱，加入版本和時間
@@ -105,4 +104,3 @@ jobs:
       with:
         name: release-apk-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
         path: app/build/outputs/apk/release/app-release-v${{ env.VERSION_NAME }}-${{ env.DATETIME }}.apk
-
